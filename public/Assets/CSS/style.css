@@ -1,0 +1,339 @@
+/* ========================================
+1. VARIABLES & BASE SETUP
+========================================
+*/
+:root {
+  --bg-color: #e0e5ec;
+  --text-main: #2d4d5a;
+  --text-muted: #74858c;
+  --primary-accent: #5dbcd2;
+  --white-shadow: #ffffff;
+  --dark-shadow: #a3b1c6;
+  --radius-lg: 30px;
+  --radius-xl: 40px; /* Softer corners for premium UI */
+  --radius-sm: 15px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Poppins",
+    "Inter",
+    -apple-system,
+    sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+main {
+  padding: 60px 0;
+  flex: 1;
+}
+
+section {
+  margin-bottom: 120px;
+}
+
+/* ========================================
+2. NAVIGATION & LOGO
+========================================
+*/
+header {
+  padding: 30px 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.logo-icon {
+  width: 55px;
+  height: 55px;
+  background: var(--bg-color);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--primary-accent);
+  box-shadow:
+    6px 6px 12px var(--dark-shadow),
+    -6px -6px 12px var(--white-shadow);
+}
+
+.logo span {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--text-main);
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: var(--bg-color);
+  box-shadow:
+    5px 5px 10px var(--dark-shadow),
+    -5px -5px 10px var(--white-shadow);
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  box-shadow:
+    2px 2px 5px var(--dark-shadow),
+    -2px -2px 5px var(--white-shadow);
+  color: var(--primary-accent);
+}
+
+nav a[aria-current="page"] {
+  box-shadow:
+    inset 4px 4px 8px var(--dark-shadow),
+    inset -4px -4px 8px var(--white-shadow);
+  color: var(--primary-accent);
+}
+
+/* ========================================
+3. HERO SECTION (SPACING FIX)
+========================================
+*/
+.hero {
+  text-align: center;
+  padding: 60px 0 100px;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 25px;
+}
+
+.hero .lead {
+  max-width: 700px;
+  margin: 0 auto 50px;
+  font-size: 1.2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+}
+
+/* ========================================
+4. NEUMORPHIC CARDS & GRIDS
+========================================
+*/
+
+/* Standard Extruded Cards */
+.form-card,
+.feature-card,
+.step-card,
+.report-card,
+.upload-panel,
+.upload-tips-panel,
+.analyzing-container {
+  background: var(--bg-color);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    15px 15px 30px var(--dark-shadow),
+    -15px -15px 30px var(--white-shadow);
+  border: none;
+  margin-bottom: 30px;
+}
+
+/* Steps Grid: Forced 2x2 Layout */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Sunken Elements (Inset) */
+.form-input,
+.file-upload-area,
+#analysis-report {
+  width: 100%;
+  background: var(--bg-color);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 18px 25px;
+  margin-top: 10px;
+  color: var(--text-main);
+  box-shadow:
+    inset 6px 6px 12px var(--dark-shadow),
+    inset -6px -6px 12px var(--white-shadow);
+  outline: none;
+}
+
+/* Results Text Wrapping */
+#analysis-report {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* ========================================
+5. DASHBOARD (CENTERED UI)
+========================================
+*/
+.dashboard-header {
+  margin-bottom: 60px;
+  text-align: center; /* Center Name and Welcome */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-header h2 {
+  font-size: 2.8rem;
+  font-weight: 800;
+}
+
+.dashboard-header p {
+  background: var(--bg-color);
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  box-shadow:
+    inset 3px 3px 6px var(--dark-shadow),
+    inset -3px -3px 6px var(--white-shadow);
+}
+
+.dashboard-actions {
+  display: flex;
+  justify-content: center; /* Center the square card */
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Square Premium Action Card */
+.action-card {
+  width: 350px;
+  height: 350px;
+  background: var(--bg-color);
+  padding: 45px;
+  border-radius: var(--radius-xl);
+  box-shadow:
+    20px 20px 40px var(--dark-shadow),
+    -20px -20px 40px var(--white-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-10px);
+  box-shadow:
+    25px 25px 50px var(--dark-shadow),
+    -25px -25px 50px var(--white-shadow);
+}
+
+.action-card .btn {
+  width: 100%;
+}
+
+/* ========================================
+6. BUTTONS & UI UTILS
+========================================
+*/
+.btn {
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-accent);
+  color: white;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background: var(--bg-color);
+  color: var(--text-main);
+  box-shadow:
+    6px 6px 12px var(--dark-shadow),
+    -6px -6px 12px var(--white-shadow);
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  border: 6px solid var(--bg-color);
+  border-top: 6px solid var(--primary-accent);
+  border-radius: 50%;
+  box-shadow: 5px 5px 10px var(--dark-shadow);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+footer {
+  padding: 60px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}

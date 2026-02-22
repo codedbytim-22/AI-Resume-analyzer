@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Resume Analyzer</title>
+    <link rel="stylesheet" href="Assets/CSS/style.css" />
+  </head>
+  <body class="page-container protected">
+    <header>
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">RAS</div>
+          <span>Resume Analyzer</span>
+        </a>
+        <nav aria-label="Primary Navigation">
+          <ul>
+            <li><a href="dashboard.html" aria-current="page">Dashboard</a></li>
+            <li><a href="upload.html">Upload Resume</a></li>
+            <li><a href="#" id="logout-link">Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div class="dashboard-header">
+          <h2 id="welcome-message">Welcome!</h2>
+          <p>Email: <span id="user-email">Loading...</span></p>
+        </div>
+
+        <div class="dashboard-actions">
+          <div class="action-card">
+            <h3>Upload Resume</h3>
+            <p>Upload your resume for review and feedback.</p>
+            <a href="upload.html" class="btn btn-primary btn-block"
+              >Upload Resume</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container footer-content">
+        <p>&copy; 2026 Resume Analysis System. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Dashboard JS -->
+    <script type="module">
+      import { auth, db } from "./Assets/JS/firebase.js";
+      import {
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+      import {
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+      const welcomeEl = document.getElementById("welcome-message");
+      const emailEl = document.getElementById("user-email");
+      const logoutLink = document.getElementById("logout-link");
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          window.location.href = "login.html";
+          return;
+        }
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          const userData = docSnap.exists() ? docSnap.data() : {};
+          const fullName = userData.fullName || "";
+          const email = userData.email || user.email;
+          welcomeEl.textContent = `Welcome${fullName ? " " + fullName : ""}!`;
+          emailEl.textContent = email;
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+          welcomeEl.textContent = "Welcome!";
+          emailEl.textContent = user.email;
+        }
+      });
+
+      logoutLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await signOut(auth);
+        window.location.href = "login.html";
+      });
+    </script>
+  </body>
+</html>

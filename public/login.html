@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Resume Analyzer</title>
+    <link rel="stylesheet" href="Assets/CSS/style.css" />
+  </head>
+  <body class="page-container">
+    <header>
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">RAS</div>
+          <span>Resume Analyzer</span>
+        </a>
+        <nav aria-label="Primary Navigation">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="login.html" aria-current="page">Login</a></li>
+            <li><a href="signup.html">Sign up</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container form-container">
+        <div class="form-card">
+          <h2 class="form-title">Login to Your Account</h2>
+          <p class="form-subtitle">
+            Enter your credentials to access your dashboard
+          </p>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email" class="form-label">Email address</label>
+              <input
+                type="email"
+                id="email"
+                class="form-input"
+                required
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                class="form-input"
+                required
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Login
+            </button>
+
+            <p class="text-center mt-3">
+              Don't have an account?
+              <a href="signup.html" class="text-link">Sign up</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container footer-content">
+        <p>&copy; 2026 Resume Analysis System. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="Assets/JS/app.js"></script>
+  </body>
+</html>

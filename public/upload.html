@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Resume | Resume Analyzer</title>
+    <link rel="stylesheet" href="Assets/CSS/style.css" />
+  </head>
+
+  <body class="page-container protected">
+    <header>
+      <div class="container header-content">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">RAS</div>
+          <span>Resume Analyzer</span>
+        </a>
+        <nav aria-label="Primary Navigation">
+          <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="upload.html" aria-current="page">Upload Resume</a></li>
+            <li><a href="#" id="logout-link">Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="upload-page">
+      <section class="upload-hero">
+        <div class="container">
+          <h1>Upload Your Resume</h1>
+          <p>Upload your resume and let us review it securely.</p>
+        </div>
+      </section>
+
+      <section class="upload-core">
+        <div class="container upload-grid">
+          <div class="upload-panel">
+            <form id="uploadForm">
+              <div class="form-group">
+                <label for="jobTarget" class="form-label"
+                  >Target Job Role (Optional)</label
+                >
+                <input
+                  type="text"
+                  id="jobTarget"
+                  class="form-input"
+                  placeholder="e.g. Software Engineer, Data Analyst"
+                />
+              </div>
+
+              <div class="file-upload-area" id="fileUploadArea">
+                <input
+                  type="file"
+                  id="resumeFile"
+                  class="file-input"
+                  accept=".pdf,.docx"
+                  required
+                />
+                <div class="file-upload-content">
+                  <div class="file-upload-icon">📄</div>
+                  <h3>Drop your resume here</h3>
+                  <p>PDF or DOCX • Max 5MB</p>
+                </div>
+              </div>
+
+              <div id="textPreview" style="margin-bottom: 20px"></div>
+
+              <button
+                type="button"
+                class="btn btn-primary btn-lg btn-block"
+                id="analyzeBtn"
+              >
+                <span class="btn-text">Submit Resume</span>
+              </button>
+            </form>
+          </div>
+
+          <aside class="upload-tips-panel">
+            <h3>Tips for Best Results</h3>
+            <ul>
+              <li>Use a clean, well-formatted resume</li>
+              <li>Ensure text is selectable (not scanned)</li>
+              <li>Include Experience, Education & Skills</li>
+              <li>Keep file size under 5MB</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-content">
+        <p>&copy; 2026 Resume Analysis System. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Upload JS & Auth -->
+    <script type="module">
+      import { auth } from "./Assets/JS/firebase.js";
+      import {
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+      const logoutLink = document.getElementById("logout-link");
+
+      // Protect page
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location.href = "login.html";
+        }
+      });
+
+      // Logout
+      logoutLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        await signOut(auth);
+        window.location.href = "login.html";
+      });
+    </script>
+  </body>
+</html>

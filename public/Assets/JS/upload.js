@@ -1,6 +1,4 @@
 // Handles Resume upload
-import { generateResumeAnalysis } from "./firebase-ai.js";
-
 document.addEventListener("DOMContentLoaded", () => {
   console.log("upload.js loaded");
 
@@ -21,13 +19,44 @@ document.addEventListener("DOMContentLoaded", () => {
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+  // File selection
   fileInput.addEventListener("change", () => {
     selectedFile = fileInput.files[0];
-    textPreview.innerHTML = selectedFile
-      ? `<p>Selected file: <strong>${selectedFile.name}</strong></p>`
-      : `<p>No file selected</p>`;
+
+    if (!selectedFile) {
+      textPreview.innerHTML = "<p>No file selected</p>";
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    if (
+      !allowedTypes.includes(selectedFile.type) &&
+      !selectedFile.name.endsWith(".docx")
+    ) {
+      alert("Unsupported file type. Upload PDF or DOCX.");
+      fileInput.value = "";
+      selectedFile = null;
+      textPreview.innerHTML = "<p>No file selected</p>";
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (selectedFile.size > 5 * 1024 * 1024) {
+      alert("File too large. Max size is 5MB.");
+      fileInput.value = "";
+      selectedFile = null;
+      textPreview.innerHTML = "<p>No file selected</p>";
+      return;
+    }
+
+    textPreview.innerHTML = `<p>Selected file: <strong>${selectedFile.name}</strong></p>`;
   });
 
+  // PDF to text
   async function pdfToText(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
@@ -40,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return text.trim();
   }
 
+  // DOCX to text
   async function docxToText(file) {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
@@ -61,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Analyze button
   analyzeBtn.addEventListener("click", async () => {
     if (isProcessing) return;
 
@@ -88,51 +119,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      textPreview.innerHTML += `<p>Resume extracted. Running AI analysis...</p>`;
+      textPreview.innerHTML += `<p>Resume extracted successfully.</p>`;
 
-      const prompt = `
-Analyze this resume and return ONLY valid JSON in the following format:
-{
-  "overallScore": 0-100,
-  "scoreTitle": "string",
-  "scoreDescription": "string",
-  "technicalSkills": ["skill1", "skill2"],
-  "softSkills": ["skill1", "skill2"],
-  "recommendations": ["rec1", "rec2"],
-  "missingSkills": ["skill1", "skill2"]
-}
+      // Store extracted text in sessionStorage for later analysis
+      sessionStorage.setItem("latestResumeText", resumeText);
 
-Resume Text:
-"""${resumeText}"""
-`;
-
-      const aiResponse = await generateResumeAnalysis(prompt);
-
-      if (!aiResponse) throw new Error("Empty AI response");
-
-      const cleaned = aiResponse.replace(/```json|```/g, "").trim();
-      let analysisData;
-
-      try {
-        analysisData = JSON.parse(cleaned);
-      } catch {
-        analysisData = {
-          overallScore: 0,
-          scoreTitle: "Analysis Generated",
-          scoreDescription: cleaned,
-          technicalSkills: [],
-          softSkills: [],
-          recommendations: [],
-          missingSkills: [],
-          rawResponse: cleaned,
-        };
-      }
-
-      sessionStorage.setItem("latestAnalysis", JSON.stringify(analysisData));
-      window.location.href = "results.html";
+      alert("Resume text ready for analysis!");
     } catch (err) {
       console.error(err);
-      textPreview.innerHTML = `<p style="color:red">Error: ${err.message}</p>`;
+      textPreview.innerHTML = `<p style="color:red">Error extracting text: ${err.message}</p>`;
     } finally {
       isProcessing = false;
       analyzeBtn.disabled = false;

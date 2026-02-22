@@ -71,6 +71,9 @@
                 id="analyzeBtn"
               >
                 <span class="btn-text">Submit Resume</span>
+                <span class="btn-loader" style="display: none"
+                  >Processing...</span
+                >
               </button>
             </form>
           </div>
@@ -94,7 +97,7 @@
       </div>
     </footer>
 
-    <!-- Upload JS & Auth -->
+    <!-- Auth protection & logout -->
     <script type="module">
       import { auth } from "./Assets/JS/firebase.js";
       import {
@@ -104,19 +107,20 @@
 
       const logoutLink = document.getElementById("logout-link");
 
-      // Protect page
+      // Page protection
       onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          window.location.href = "login.html";
-        }
+        if (!user) window.location.href = "login.html";
       });
 
-      // Logout
+      // Logout functionality
       logoutLink.addEventListener("click", async (e) => {
         e.preventDefault();
         await signOut(auth);
         window.location.href = "login.html";
       });
     </script>
+
+    <!-- Resume upload logic -->
+    <script type="module" src="Assets/JS/upload.js"></script>
   </body>
 </html>

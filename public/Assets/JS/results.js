@@ -1,22 +1,42 @@
-//Displays Formatted results
+// Displays formatted results
 document.addEventListener("DOMContentLoaded", () => {
   const reportEl = document.getElementById("analysis-report");
   const dateEl = document.getElementById("analysis-date");
   const downloadBtn = document.getElementById("download-report");
+
+  if (!reportEl) {
+    console.error("Report element not found.");
+    return;
+  }
 
   const stored = sessionStorage.getItem("latestAnalysis");
 
   if (!stored) {
     reportEl.textContent =
       "No analysis data found. Please analyze a resume first.";
+    if (dateEl) dateEl.textContent = "";
+    if (downloadBtn) downloadBtn.disabled = true;
     return;
   }
 
-  const data = JSON.parse(stored);
-  dateEl.textContent = new Date().toLocaleString();
+  let data;
+  try {
+    data = JSON.parse(stored);
+  } catch (err) {
+    console.error("Error parsing stored analysis:", err);
+    reportEl.textContent =
+      "Corrupted analysis data. Please re-analyze your resume.";
+    if (dateEl) dateEl.textContent = "";
+    if (downloadBtn) downloadBtn.disabled = true;
+    return;
+  }
+
+  if (dateEl) dateEl.textContent = new Date().toLocaleString();
 
   const list = (arr) =>
-    arr && arr.length ? arr.map((item) => `• ${item}`).join("\n") : "• None";
+    arr && Array.isArray(arr) && arr.length
+      ? arr.map((item) => `• ${item}`).join("\n")
+      : "• None";
 
   const reportText = `
 Resume Analysis Report
@@ -44,29 +64,33 @@ Missing Skills
 ${list(data.missingSkills)}
 `.trim();
 
-  // Show text in report card
   reportEl.textContent = reportText;
 
   // PDF Download
-  downloadBtn.addEventListener("click", async () => {
-    // Load html2pdf.js dynamically if not loaded
-    if (!window.html2pdf) {
-      const script = document.createElement("script");
-      script.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-      document.body.appendChild(script);
-      await new Promise((resolve) => (script.onload = resolve));
-    }
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", async () => {
+      try {
+        if (!window.html2pdf) {
+          const script = document.createElement("script");
+          script.src =
+            "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+          document.body.appendChild(script);
+          await new Promise((resolve) => (script.onload = resolve));
+        }
 
-    const opt = {
-      margin: 0.5,
-      filename: "resume-analysis-report.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
+        const opt = {
+          margin: 0.5,
+          filename: "resume-analysis-report.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+        };
 
-    html2pdf().set(opt).from(reportEl).save();
-  });
+        html2pdf().set(opt).from(reportEl).save();
+      } catch (err) {
+        console.error("PDF download failed:", err);
+        alert("Failed to download PDF. Please try again.");
+      }
+    });
+  }
 });
-results.js;

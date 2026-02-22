@@ -71,9 +71,6 @@
                 id="analyzeBtn"
               >
                 <span class="btn-text">Submit Resume</span>
-                <span class="btn-loader" style="display: none"
-                  >Processing...</span
-                >
               </button>
             </form>
           </div>
@@ -97,8 +94,13 @@
       </div>
     </footer>
 
-    <!-- Auth protection & logout -->
+    <!-- Module-safe JS imports -->
     <script type="module">
+      // Import PDF.js for upload.js
+      import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      window.pdfjsLib = pdfjsLib; // expose globally for upload.js
+
+      // Firebase auth
       import { auth } from "./Assets/JS/firebase.js";
       import {
         onAuthStateChanged,
@@ -107,20 +109,20 @@
 
       const logoutLink = document.getElementById("logout-link");
 
-      // Page protection
+      // Protect page
       onAuthStateChanged(auth, (user) => {
         if (!user) window.location.href = "login.html";
       });
 
-      // Logout functionality
+      // Logout
       logoutLink.addEventListener("click", async (e) => {
         e.preventDefault();
         await signOut(auth);
         window.location.href = "login.html";
       });
-    </script>
 
-    <!-- Resume upload logic -->
-    <script type="module" src="Assets/JS/upload.js"></script>
+      // Import upload logic after PDF.js is loaded
+      import("./Assets/JS/upload.js");
+    </script>
   </body>
 </html>

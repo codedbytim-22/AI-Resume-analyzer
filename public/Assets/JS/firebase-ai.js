@@ -2,32 +2,46 @@ const GEMINI_API_KEY = " AIzaSyCj_IKM2cBM4e46_PH4d6AkJpqa3EV4gRQ";
 
 export async function generateResumeAnalysis(resumeText) {
   const prompt = `
-You are a senior technical recruiter and ATS evaluator in 2025.
+You are an experienced recruiter evaluating resumes for students and entry-level candidates across all professional fields (business, tech, healthcare, arts, engineering, etc.).
 
-Analyze the following resume thoroughly and return ONLY valid JSON.
+Your evaluation must be realistic but fair for early-career applicants.
 
-Be strict, realistic, and detailed.
+Important evaluation rules:
+- Do NOT penalize heavily for lack of full-time experience.
+- Consider internships, academic projects, coursework, volunteer work, certifications, and leadership roles as valid experience.
+- Focus on clarity, structure, relevance, professionalism, and potential.
+- Reward measurable achievements when present.
 
-Scoring Rules:
-- Score from 0 to 100
-- Evaluate structure, clarity, measurable impact, formatting, professionalism
-- Be critical
+Score from 0 to 100 using this rough scale:
+90–100 = Excellent student/entry-level resume
+75–89 = Strong with minor improvements needed
+60–74 = Average, needs improvement
+40–59 = Weak structure or missing key sections
+Below 40 = Very underdeveloped
 
-Return JSON in this exact structure:
+Return ONLY valid JSON in this exact format:
 
 {
   "overallScore": number,
-  "scoreTitle": "short summary",
-  "scoreDescription": "3-5 detailed paragraphs explaining strengths and weaknesses",
-  "technicalSkills": ["skill1", "skill2"],
-  "softSkills": ["skill1", "skill2"],
-  "recommendations": ["improvement1", "improvement2", "improvement3", "improvement4", "improvement5"],
-  "missingSkills": ["skill1", "skill2"]
+  "scoreTitle": "short summary title",
+  "scoreDescription": "3–5 detailed paragraphs explaining strengths, weaknesses, and potential",
+  "technicalSkills": ["list extracted technical or field-specific skills"],
+  "softSkills": ["list extracted soft skills"],
+  "recommendations": [
+    "clear actionable improvement 1",
+    "clear actionable improvement 2",
+    "clear actionable improvement 3",
+    "clear actionable improvement 4",
+    "clear actionable improvement 5"
+  ],
+  "missingSkills": ["important skills missing for this candidate's field"]
 }
 
-Do not include markdown.
-Do not include explanations outside JSON.
-Do not leave arrays empty — explain inside description if none found.
+Rules:
+- Do not include markdown.
+- Do not include explanations outside JSON.
+- If a section truly has no items, explain clearly in scoreDescription and return an empty array.
+- Be specific. Avoid generic advice.
 
 Resume to analyze:
 -------------------

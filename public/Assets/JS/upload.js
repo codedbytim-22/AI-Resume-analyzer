@@ -1,6 +1,10 @@
-// Handles Resume upload
+// upload.js
+console.log("UPLOAD JS LOADED");
+
+import { generateResumeAnalysis } from "./firebase-ai.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("upload.js loaded");
+  console.log("upload.js DOM ready");
 
   const fileInput = document.getElementById("resumeFile");
   const analyzeBtn = document.getElementById("analyzeBtn");
@@ -9,47 +13,40 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnLoader = analyzeBtn.querySelector(".btn-loader");
 
   if (!fileInput || !analyzeBtn || !textPreview) {
-    console.warn("Essential elements missing");
+    console.error("Essential elements missing");
     return;
   }
 
   let selectedFile = null;
   let isProcessing = false;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  // PDF.js worker
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  }
 
   // File selection
   fileInput.addEventListener("change", () => {
     selectedFile = fileInput.files[0];
-
     if (!selectedFile) {
       textPreview.innerHTML = "<p>No file selected</p>";
       return;
     }
 
-    // Validate file type
-    const allowedTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    if (
-      !allowedTypes.includes(selectedFile.type) &&
-      !selectedFile.name.endsWith(".docx")
-    ) {
-      alert("Unsupported file type. Upload PDF or DOCX.");
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      alert("File exceeds 5MB limit.");
       fileInput.value = "";
-      selectedFile = null;
-      textPreview.innerHTML = "<p>No file selected</p>";
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (selectedFile.size > 5 * 1024 * 1024) {
-      alert("File too large. Max size is 5MB.");
+    const isPdf = selectedFile.type === "application/pdf";
+    const isDocx = selectedFile.name.toLowerCase().endsWith(".docx");
+
+    if (!isPdf && !isDocx) {
+      alert("Unsupported file type. Upload PDF or DOCX.");
       fileInput.value = "";
-      selectedFile = null;
-      textPreview.innerHTML = "<p>No file selected</p>";
       return;
     }
 
@@ -69,19 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return text.trim();
   }
 
-  // DOCX to text
+  // DOCX to text using Mammoth
   async function docxToText(file) {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
       reader.onload = async (e) => {
         try {
-          const zip = await JSZip.loadAsync(e.target.result);
-          const docXml = await zip.file("word/document.xml").async("string");
-          const text = docXml
-            .replace(/<[^>]+>/g, " ")
-            .replace(/\s+/g, " ")
-            .trim();
-          resolve(text);
+          const arrayBuffer = e.target.result;
+          const result = await mammoth.extractRawText({ arrayBuffer });
+          resolve(result.value);
         } catch (err) {
           reject(err);
         }
@@ -91,10 +84,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Analyze button
+  // Click handler
   analyzeBtn.addEventListener("click", async () => {
-    if (isProcessing) return;
+    console.log("BUTTON CLICKED");
 
+    if (isProcessing) return;
     if (!selectedFile) {
       alert("Please select a resume first");
       return;
@@ -104,30 +98,47 @@ document.addEventListener("DOMContentLoaded", () => {
     analyzeBtn.disabled = true;
     btnText.style.display = "none";
     btnLoader.style.display = "inline";
-
     textPreview.innerHTML = `<p>Extracting text from <strong>${selectedFile.name}</strong>...</p>`;
 
     try {
       let resumeText = "";
-
       if (selectedFile.type === "application/pdf") {
         resumeText = await pdfToText(selectedFile);
-      } else if (selectedFile.name.endsWith(".docx")) {
-        resumeText = await docxToText(selectedFile);
       } else {
-        alert("Unsupported file type. Upload PDF or DOCX.");
-        return;
+        resumeText = await docxToText(selectedFile);
       }
 
-      textPreview.innerHTML += `<p>Resume extracted successfully.</p>`;
+      if (!resumeText || resumeText.length < 50) {
+        throw new Error("Resume extraction failed or file too short.");
+      }
 
-      // Store extracted text in sessionStorage for later analysis
-      sessionStorage.setItem("latestResumeText", resumeText);
+      textPreview.innerHTML += `<p>Resume extracted. Running AI analysis...</p>`;
 
-      alert("Resume text ready for analysis!");
+      const aiResponse = await generateResumeAnalysis(resumeText);
+      if (!aiResponse) throw new Error("Empty AI response");
+
+      const cleaned = aiResponse.replace(/```json|```/g, "").trim();
+      let analysisData;
+
+      try {
+        analysisData = JSON.parse(cleaned);
+      } catch {
+        analysisData = {
+          overallScore: 0,
+          scoreTitle: "AI Analysis",
+          scoreDescription: cleaned,
+          technicalSkills: [],
+          softSkills: [],
+          recommendations: [],
+          missingSkills: [],
+        };
+      }
+
+      sessionStorage.setItem("latestAnalysis", JSON.stringify(analysisData));
+      window.location.href = "results.html";
     } catch (err) {
-      console.error(err);
-      textPreview.innerHTML = `<p style="color:red">Error extracting text: ${err.message}</p>`;
+      console.error("Error:", err);
+      textPreview.innerHTML = `<p style="color:red">Error: ${err.message}</p>`;
     } finally {
       isProcessing = false;
       analyzeBtn.disabled = false;

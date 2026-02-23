@@ -67,7 +67,6 @@ if (loginForm) {
   });
 }
 
-// -------------------- DASHBOARD AUTH CHECK --------------------
 const welcomeEl = document.getElementById("welcome-message");
 const emailEl = document.getElementById("user-email");
 const logoutLink = document.getElementById("logout-link");

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload Resume | Resume Analyzer</title>
     <link rel="stylesheet" href="Assets/CSS/style.css" />
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- JSZip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Mammoth.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
   </head>
 
   <body class="page-container protected">
@@ -18,7 +25,7 @@
           <ul>
             <li><a href="dashboard.html">Dashboard</a></li>
             <li><a href="upload.html" aria-current="page">Upload Resume</a></li>
-            <li><a href="#" id="logout-link">Logout</a></li>
+            <li><a href="login.html" id="logout-link">Logout</a></li>
           </ul>
         </nav>
       </div>
@@ -28,7 +35,9 @@
       <section class="upload-hero">
         <div class="container">
           <h1>Upload Your Resume</h1>
-          <p>Upload your resume and let us review it securely.</p>
+          <p>
+            Upload your resume and let AI analyze your skills and strengths.
+          </p>
         </div>
       </section>
 
@@ -48,7 +57,7 @@
                 />
               </div>
 
-              <div class="file-upload-area" id="fileUploadArea">
+              <div class="file-upload-area">
                 <input
                   type="file"
                   id="resumeFile"
@@ -71,6 +80,9 @@
                 id="analyzeBtn"
               >
                 <span class="btn-text">Submit Resume</span>
+                <span class="btn-loader" style="display: none"
+                  >Processing...</span
+                >
               </button>
             </form>
           </div>
@@ -94,35 +106,6 @@
       </div>
     </footer>
 
-    <!-- Module-safe JS imports -->
-    <script type="module">
-      // Import PDF.js for upload.js
-      import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-      window.pdfjsLib = pdfjsLib; // expose globally for upload.js
-
-      // Firebase auth
-      import { auth } from "./Assets/JS/firebase.js";
-      import {
-        onAuthStateChanged,
-        signOut,
-      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-
-      const logoutLink = document.getElementById("logout-link");
-
-      // Protect page
-      onAuthStateChanged(auth, (user) => {
-        if (!user) window.location.href = "login.html";
-      });
-
-      // Logout
-      logoutLink.addEventListener("click", async (e) => {
-        e.preventDefault();
-        await signOut(auth);
-        window.location.href = "login.html";
-      });
-
-      // Import upload logic after PDF.js is loaded
-      import("./Assets/JS/upload.js");
-    </script>
+    <script type="module" src="Assets/JS/upload.js"></script>
   </body>
 </html>

@@ -1,8 +1,12 @@
+// Assets/JS/results.js
+import { auth } from "./firebase.js";
+
 // Displays formatted results
 document.addEventListener("DOMContentLoaded", () => {
   const reportEl = document.getElementById("analysis-report");
   const dateEl = document.getElementById("analysis-date");
   const downloadBtn = document.getElementById("download-report");
+  const emailBtn = document.getElementById("email-report");
 
   if (!reportEl) {
     console.error("Report element not found.");
@@ -16,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "No analysis data found. Please analyze a resume first.";
     if (dateEl) dateEl.textContent = "";
     if (downloadBtn) downloadBtn.disabled = true;
+    if (emailBtn) emailBtn.disabled = true;
     return;
   }
 
@@ -28,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "Corrupted analysis data. Please re-analyze your resume.";
     if (dateEl) dateEl.textContent = "";
     if (downloadBtn) downloadBtn.disabled = true;
+    if (emailBtn) emailBtn.disabled = true;
     return;
   }
 
@@ -91,6 +97,20 @@ ${list(data.missingSkills)}
         console.error("PDF download failed:", err);
         alert("Failed to download PDF. Please try again.");
       }
+    });
+  }
+
+  // Email Report
+  if (emailBtn) {
+    emailBtn.addEventListener("click", () => {
+      const userEmail = auth.currentUser?.email ?? "";
+      const subject = encodeURIComponent("Your Resume Analysis Report");
+      const body = encodeURIComponent(
+        `Hello,\n\nHere is your resume analysis report:\n\n${reportText}`,
+      );
+
+      const mailtoLink = `mailto:${userEmail}?subject=${subject}&body=${body}`;
+      window.location.href = mailtoLink;
     });
   }
 });

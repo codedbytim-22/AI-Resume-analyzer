@@ -337,3 +337,7 @@ footer {
   font-size: 0.9rem;
   color: var(--text-muted);
 }
+/* Send Email Button spacing */
+.action-buttons #email-report {
+  margin-left: 8px; /* slight gap to separate from other buttons */
+}

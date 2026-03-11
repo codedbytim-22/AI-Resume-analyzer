@@ -3,8 +3,8 @@
 ========================================
 */
 :root {
-  --bg-color: #e0e5ec;
-  --text-main: #2d4d5a;
+  --bg-color: #e0e5ec; /* bg color*/
+  --text-main: #2d4d5a; /*Main text color*/
   --text-muted: #74858c;
   --primary-accent: #5dbcd2;
   --white-shadow: #ffffff;
@@ -305,8 +305,7 @@ nav a[aria-current="page"] {
   transform: scale(0.97);
   box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
-
-.btn-secondary {
+a .btn-secondary {
   background: var(--bg-color);
   color: var(--text-main);
   box-shadow:
@@ -340,4 +339,115 @@ footer {
 /* Send Email Button spacing */
 .action-buttons #email-report {
   margin-left: 8px; /* slight gap to separate from other buttons */
+}
+/* ========================================
+7. RESPONSIVE DESIGN (MEDIA QUERIES)
+======================================== */
+
+/* Tablet & Smaller Desktops (Under 1024px) */
+@media (max-width: 1024px) {
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+
+  .steps-grid {
+    gap: 25px;
+    padding: 0 20px;
+  }
+}
+
+/* Mobile Devices (Under 768px) */
+@media (max-width: 768px) {
+  section {
+    margin-bottom: 60px;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  /* Navigation Mobile */
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  nav ul {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  nav a {
+    padding: 8px 15px;
+    font-size: 0.8rem;
+  }
+
+  /* Hero Section */
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* Grids to Single Column */
+  .steps-grid,
+  .features-grid,
+  .upload-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Dashboard Cards */
+  .action-card {
+    width: 100%; /* Full width on mobile */
+    height: auto; /* Remove fixed height */
+    aspect-ratio: 1 / 1; /* Keep it square-ish */
+    padding: 30px;
+  }
+
+  .dashboard-header h2 {
+    font-size: 2rem;
+  }
+
+  /* Neumorphic Scaling - Smaller shadows for smaller screens */
+  .form-card,
+  .feature-card,
+  .step-card,
+  .action-card,
+  .upload-panel {
+    padding: 25px;
+    box-shadow:
+      8px 8px 16px var(--dark-shadow),
+      -8px -8px 16px var(--white-shadow);
+  }
+}
+
+/* Very Small Screens (Under 480px) */
+@media (max-width: 480px) {
+  .logo span {
+    font-size: 1.1rem;
+  }
+
+  .logo-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 0.9rem;
+  }
+
+  .action-card {
+    aspect-ratio: auto; /* Allow growth if text is long */
+  }
+
+  #analysis-report {
+    font-size: 0.85rem;
+    padding: 12px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px 20px;
+  }
 }

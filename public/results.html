@@ -24,6 +24,72 @@
         gap: 12px;
         flex-wrap: wrap;
       }
+
+      /* Donation Modal Styling */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+      }
+      .modal-content {
+        background: white;
+        margin: 10% auto;
+        padding: 0;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      .modal-header {
+        background: #1eb53a;
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: sans-serif;
+      }
+      .modal-body {
+        padding: 20px;
+        font-family: sans-serif;
+      }
+      .close-btn {
+        cursor: pointer;
+        font-size: 24px;
+        color: white;
+        line-height: 1;
+      }
+      .btn-mpesa-send {
+        background: #1eb53a;
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 1rem;
+      }
+      .btn-mpesa-send:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      .status-msg {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        display: none;
+        text-align: center;
+        font-size: 0.9rem;
+      }
     </style>
   </head>
   <body class="page-container protected">
@@ -71,8 +137,140 @@
             Send Report via Email
           </button>
         </div>
+
+        <!-- Donation Section -->
+        <div
+          style="
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+          "
+        >
+          <p style="font-size: 1rem; color: #2d4d5a; margin-bottom: 15px">
+            Support this free service with a donation
+          </p>
+          <button type="button" id="openDonation" class="btn-mpesa-send">
+            Donate with M-Pesa (KES 100)
+          </button>
+        </div>
       </div>
     </main>
+
+    <!-- Donation Modal -->
+    <div id="donationModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <strong>Donate via M-Pesa</strong>
+          <span class="close-btn" id="closeDonation">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div id="donationStatus" class="status-msg"></div>
+          <div class="form-group" style="margin-bottom: 15px">
+            <label class="form-label" style="display: block; margin-bottom: 5px"
+              >Phone Number</label
+            >
+            <input
+              type="number"
+              id="donationPhone"
+              class="form-input"
+              placeholder="2547XXXXXXXX"
+              value="2547"
+              style="
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+              "
+            />
+            <small style="color: #666">Enter number in 254 format</small>
+          </div>
+          <button
+            type="button"
+            id="initiateDonation"
+            class="btn-mpesa-send"
+            style="margin-top: 0"
+          >
+            Send STK Prompt
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const modal = document.getElementById("donationModal");
+      const openBtn = document.getElementById("openDonation");
+      const closeBtn = document.getElementById("closeDonation");
+      const initiateBtn = document.getElementById("initiateDonation");
+
+      // Open Modal
+      if (openBtn) {
+        openBtn.onclick = () => {
+          modal.style.display = "block";
+        };
+      }
+
+      // Close Modal
+      if (closeBtn) {
+        closeBtn.onclick = () => {
+          modal.style.display = "none";
+          const statusDiv = document.getElementById("donationStatus");
+          if (statusDiv) statusDiv.style.display = "none";
+        };
+      }
+
+      // Close if clicking outside the modal
+      window.onclick = (event) => {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+
+      // Handle the STK Push Request
+      if (initiateBtn) {
+        initiateBtn.onclick = async () => {
+          const phone = document.getElementById("donationPhone").value;
+          const statusDiv = document.getElementById("donationStatus");
+
+          if (phone.length < 12 || !phone.startsWith("254")) {
+            alert("Please enter a valid phone number starting with 254.");
+            return;
+          }
+
+          initiateBtn.disabled = true;
+          initiateBtn.innerText = "Processing...";
+          statusDiv.style.display = "none";
+
+          try {
+            // Pointing to your PHP backend file
+            const response = await fetch("mpesa_gateway.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: `phone=${phone}&amount=1&initiate_mpesa=1`,
+            });
+
+            const data = await response.json();
+
+            statusDiv.style.display = "block";
+            statusDiv.innerText = data.message;
+            statusDiv.style.background =
+              data.status === "success" ? "#d4edda" : "#f8d7da";
+            statusDiv.style.color =
+              data.status === "success" ? "#155724" : "#721c24";
+          } catch (e) {
+            statusDiv.style.display = "block";
+            statusDiv.innerText =
+              "Error connecting to server. Ensure mpesa_gateway.php exists.";
+            statusDiv.style.background = "#f8d7da";
+            statusDiv.style.color = "#721c24";
+          } finally {
+            initiateBtn.disabled = false;
+            initiateBtn.innerText = "Send STK Prompt";
+          }
+        };
+      }
+    </script>
 
     <footer>
       <div class="container footer-content">

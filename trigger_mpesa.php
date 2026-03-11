@@ -39,7 +39,7 @@ if (isset($_POST['phone'])) {
         'PartyA' => $phone,
         'PartyB' => $BusinessShortCode,
         'PhoneNumber' => $phone,
-        'CallBackURL' => 'https://example.com/ignored', // We don't care about the callback right now
+        'CallBackURL' => 'https://example.com/ignored', // wont implement a call back for now
         'AccountReference' => "Test",
         'TransactionDesc' => "Test"
     ];

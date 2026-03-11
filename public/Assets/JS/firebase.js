@@ -23,10 +23,10 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// 🔹 Initialize Gemini AI backend
+//  Initialize Gemini AI backend
 const ai = getAI(app, { backend: new GoogleAIBackend() });
 
-// 🔹 Create GenerativeModel instance
+//  Create GenerativeModel instance
 export const model = getGenerativeModel(ai, {
   model: "gemini-3-flash-preview",
 });

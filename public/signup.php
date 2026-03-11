@@ -70,7 +70,7 @@
             <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
               <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">Premium Activation Required</p>
               <button type="button" id="openMpesa" class="btn-mpesa-send">
-                Pay with M-Pesa (KES 100)
+                Pay with M-Pesa (KES 1)
               </button>
             </div>
 

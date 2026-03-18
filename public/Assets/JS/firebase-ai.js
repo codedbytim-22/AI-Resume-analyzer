@@ -35,7 +35,6 @@ Return ONLY valid JSON in this exact format:
     "clear actionable improvement 5"
   ],
   "missingSkills": ["important skills missing for this candidate's field"]
-  "Career Recommendation": "suggested career paths or roles that align with the candidate's profile"]
 }
 
 Rules:

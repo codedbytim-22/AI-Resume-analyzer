@@ -33,9 +33,9 @@ Return ONLY valid JSON in this exact format:
     "clear actionable improvement 3",
     "clear actionable improvement 4",
     "clear actionable improvement 5"
-    "What careers to venture into based on the resume's strengths and interests"
   ],
   "missingSkills": ["important skills missing for this candidate's field"]
+  "Career Recommendation": "suggested career paths or roles that align with the candidate's profile"]
 }
 
 Rules:

@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
       textPreview.innerHTML = "<p>No file selected</p>";
       return;
     }
-
+    //upload validation line 37 - 55//
     if (selectedFile.size > MAX_FILE_SIZE) {
       alert("File exceeds 5MB limit.");
       fileInput.value = "";

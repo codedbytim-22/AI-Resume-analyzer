@@ -53,7 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
     textPreview.innerHTML = `<p>Selected file: <strong>${selectedFile.name}</strong></p>`;
   });
 
-  // PDF to text
+  // PDF to text- pdf.js line 56  - 68
+
   async function pdfToText(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
@@ -66,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return text.trim();
   }
 
-  // DOCX to text using Mammoth
+  // DOCX to text using Mammoth line 70 - 82
   async function docxToText(file) {
     const reader = new FileReader();
     return new Promise((resolve, reject) => {
@@ -99,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnText.style.display = "none";
     btnLoader.style.display = "inline";
     textPreview.innerHTML = `<p>Extracting text from <strong>${selectedFile.name}</strong>...</p>`;
-
+    // The rest of the processing is handled in the try-catch block below
     try {
       let resumeText = "";
       if (selectedFile.type === "application/pdf") {
@@ -113,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       textPreview.innerHTML += `<p>Resume extracted. Running AI analysis...</p>`;
-
+      // AI analysis
       const aiResponse = await generateResumeAnalysis(resumeText);
       if (!aiResponse) throw new Error("Empty AI response");
 

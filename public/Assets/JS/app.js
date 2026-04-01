@@ -11,7 +11,7 @@ import {
   getDoc,
 } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-// -------------------- SIGNUP --------------------
+//  SIGNUP
 const signupForm = document.getElementById("signupForm");
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
@@ -49,7 +49,7 @@ if (signupForm) {
   });
 }
 
-// -------------------- LOGIN --------------------
+// LOGIN
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
@@ -95,7 +95,7 @@ if (welcomeEl && emailEl) {
   });
 }
 
-// -------------------- LOGOUT --------------------
+//  LOGOUT
 if (logoutLink) {
   logoutLink.addEventListener("click", async (e) => {
     e.preventDefault();

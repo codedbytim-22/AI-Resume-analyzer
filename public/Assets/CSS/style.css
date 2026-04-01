@@ -125,9 +125,8 @@ nav a[aria-current="page"] {
   color: var(--primary-accent);
 }
 
-/* ========================================
+/* 
 3. HERO SECTION (SPACING FIX)
-========================================
 */
 .hero {
   text-align: center;
@@ -211,9 +210,8 @@ nav a[aria-current="page"] {
   line-height: 1.7;
 }
 
-/* ========================================
+/*
 5. DASHBOARD (CENTERED UI)
-========================================
 */
 .dashboard-header {
   margin-bottom: 60px;
@@ -278,9 +276,8 @@ nav a[aria-current="page"] {
   width: 100%;
 }
 
-/* ========================================
+/* 
 6. BUTTONS & UI UTILS
-========================================
 */
 .btn {
   display: inline-block;

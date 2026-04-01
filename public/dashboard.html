@@ -49,6 +49,7 @@
     </footer>
 
     <!-- Dashboard JS -->
+    <!--Auth-->
     <script type="module">
       import { auth, db } from "./Assets/JS/firebase.js";
       import {
@@ -59,7 +60,7 @@
         doc,
         getDoc,
       } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-
+      //welcome message and email display/ corresponds to app.js
       const welcomeEl = document.getElementById("welcome-message");
       const emailEl = document.getElementById("user-email");
       const logoutLink = document.getElementById("logout-link");
@@ -69,6 +70,7 @@
           window.location.href = "login.html";
           return;
         }
+
         try {
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);

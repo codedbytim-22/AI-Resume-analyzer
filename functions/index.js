@@ -10,7 +10,7 @@ const logger = require("firebase-functions/logger");
 setGlobalOptions({ maxInstances: 10 });
 
 /**
- * 🔹 analyzeResume
+ *  analyzeResume
  * Callable function used by frontend:
  * httpsCallable(functions, "analyzeResume")
  */
@@ -22,14 +22,14 @@ exports.analyzeResume = onCall(async (request) => {
       throw new Error("No prompt provided.");
     }
 
-    // 🔐 Get Gemini API Key from environment variable
+    // Get Gemini API Key from environment variable
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
       throw new Error("Gemini API key not configured.");
     }
 
-    // 🔹 Call Gemini REST API
+    // Call Gemini REST API index.js l32 - 60
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {

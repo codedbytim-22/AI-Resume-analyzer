@@ -108,7 +108,7 @@ ${list(data.missingSkills)}
       const body = encodeURIComponent(
         `Hello,\n\nHere is your resume analysis report:\n\n${reportText}`,
       );
-
+      //EMAIL UISNG mailto protocol
       const mailtoLink = `mailto:${userEmail}?subject=${subject}&body=${body}`;
       window.location.href = mailtoLink;
     });

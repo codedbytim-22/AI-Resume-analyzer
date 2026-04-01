@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['initiate_mpesa'])) {
         exit;
     }
 
-    // 2. Your Safaricom Sandbox Credentials
+    // Safaricom Sandbox Credentials
     $consumerKey = 'T2Rt3zLgO20r6pTuWDRSThC1YM311NPN'; 
     $consumerSecret = 'NX6xgyPjQbQ3a1vC'; 
     $BusinessShortCode = '174379';
@@ -29,13 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['initiate_mpesa'])) {
     $Timestamp = date('YmdHis');
     $Password = base64_encode($BusinessShortCode . $Passkey . $Timestamp);
 
-    // 3. Authenticate with Safaricom to get the Access Token
+    //Authenticate with Safaricom to get the Access Token
     $ch = curl_init('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_USERPWD, $consumerKey . ':' . $consumerSecret);
     $token_response = json_decode(curl_exec($ch));
-    $token = $token_response->access_token ?? null;
+    $token = $token_response
+    ->access_token ?? null;
     curl_close($ch);
 
     if (!$token) {

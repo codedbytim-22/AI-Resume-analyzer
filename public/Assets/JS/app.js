@@ -22,6 +22,19 @@ if (signupForm) {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
 
+    // Name validation: letters, spaces, hyphens, apostrophes only (no numbers)
+    const nameRegex = /^[A-Za-zÀ-ÿ\s'-]+$/;
+    if (!nameRegex.test(fullName)) {
+      alert(
+        "Full Name must contain only letters, spaces, hyphens, or apostrophes. No numbers allowed.",
+      );
+      return;
+    }
+    if (fullName.length < 2) {
+      alert("Full Name must be at least 2 characters.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -85,7 +98,10 @@ if (welcomeEl && emailEl) {
       const fullName = userData.fullName || "";
       const email = userData.email || user.email;
 
-      welcomeEl.textContent = `Welcome${fullName ? " " + fullName : ""}!`;
+      // Clean name for display (letters only, extra safety)
+      const displayName =
+        fullName.replace(/[^A-Za-zÀ-ÿ\\s'-]/g, "").trim() || "User";
+      welcomeEl.textContent = `Welcome ${displayName}!`;
       emailEl.textContent = email;
     } catch (err) {
       console.error("Error fetching user data:", err);

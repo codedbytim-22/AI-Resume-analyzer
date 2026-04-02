@@ -150,9 +150,8 @@ nav a[aria-current="page"] {
   justify-content: center;
 }
 
-/* ========================================
+/* 
 4. NEUMORPHIC CARDS & GRIDS
-========================================
 */
 
 /* Standard Extruded Cards */
@@ -197,6 +196,24 @@ nav a[aria-current="page"] {
     inset 6px 6px 12px var(--dark-shadow),
     inset -6px -6px 12px var(--white-shadow);
   outline: none;
+}
+
+.password-wrapper {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 18px;
+}
+.toggle-password:hover {
+  color: var(--primary-accent);
 }
 
 /* Results Text Wrapping */
@@ -336,9 +353,9 @@ footer {
 .action-buttons #email-report {
   margin-left: 8px; /* slight gap to separate from other buttons */
 }
-/* ========================================
+/* 
 7. RESPONSIVE DESIGN (MEDIA QUERIES)
-======================================== */
+ */
 
 /* Tablet & Smaller Desktops (Under 1024px) */
 @media (max-width: 1024px) {

@@ -45,13 +45,31 @@
 
             <div class="form-group">
               <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                id="password"
-                class="form-input"
-                required
-                placeholder="Enter your password"
-              />
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-input"
+                  required
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-for="password"
+                  title="Show password"
+                >
+                  👁
+                </button>
+              </div>
+              <p style="font-size: 0.8rem; margin-top: 5px">
+                <a
+                  href="#"
+                  class="password-reset-link"
+                  style="color: var(--primary-accent)"
+                  >Forgot Password?</a
+                >
+              </p>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block">
@@ -74,5 +92,10 @@
     </footer>
 
     <script type="module" src="Assets/JS/app.js"></script>
+    <script src="password-visibility-fix.js"></script>
+    <script type="module">
+      import { initPasswordReset } from "./password-reset-feature.js";
+      initPasswordReset();
+    </script>
   </body>
 </html>
